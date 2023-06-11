@@ -1,3 +1,4 @@
+
 <script>
     $('document').ready(function(){
         $.ajaxSetup({
@@ -44,10 +45,21 @@
             })
         })
 
-        $('body').on('click','.showTodoDetail',function(e){
+        $('body').on('click', '.showTodoDetail', function (e) {
             e.preventDefault();
-            alert(1);
+            let title = $(this).data('title');
+            let description = $(this).data('description');
+            let status = $(this).data('status');
+            let imagePath = $(this).data('image');
+            let deadline = $(this).data('deadline');
+            $('.modal-title').html(title);
+            $('.description').text(description);
+            $('.deadline').text(deadline);
+            $(".image").attr("src", imagePath);
+            $('.status').text(status);
+            $('#addslider').modal('show');
         });
+
 
         $('.delete').click(function (event) {
             event.preventDefault();

@@ -13,7 +13,7 @@
 
     <div class="col-lg-6 mb-3">
         <label for="description" class="form-label">Description<span style="color: red">*</span></label>
-        <textarea class="form-control" name="description" id="tinymceExample" rows="4">
+        <textarea class="form-control tinymce-editor" id="description" name="description" >
             {{ isset($todoDetail) ? $todoDetail->description : old('description')}}
         </textarea>
     </div>

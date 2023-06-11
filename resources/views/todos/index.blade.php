@@ -1,18 +1,20 @@
 @extends('layouts.app')
 
+
+
 @section('content')
 
     <div class="container">
         @include('layouts.flash_message')
 
-
         <div class="search-box p-4  bg-white rounded mb-3 box-shadow pb-2">
             <form class="forms-sample" action="{{route('user.todos.index')}}" method="get">
                 <h5 class="mb-3 text-primary">Todo  Filter</h5>
                 <div class="row align-items-center">
+
                     <div class="col-xxl col-xl-4  col-md-6 mb-3">
                         <label for="" class="form-label">Status</label>
-                        <select class="form-select form-select-lg" name="status" id="status">
+                        <select class="form-select statusFilter form-select-lg" id="filterTodo" name="status" >
                             <option value="" {{!isset($filterParameters['status']) ? 'selected': ''}} > All </option>
                             @foreach(\App\Models\Todo::STATUS as $key => $value)
                                 <option value="{{$key}}" {{ isset($filterParameters['status']) && $filterParameters['status'] == $key ? 'selected': '' }}>
@@ -43,7 +45,7 @@
                                 </button>
                             </a>
                         </div>
-                        <div class="mx-auto float-end">
+                        <div class="mx-auto ">
                             <h4 class="text-primary mt-md-0 ">Todo Lists</h4>
                         </div>
                     </div>
@@ -51,7 +53,7 @@
                     <div class="card-body">
                         @forelse($todoLists as $key => $value)
                             <div class="row align-items-center mb-4 border-bottom pb-3">
-                            <div class="col-lg-8 d-flex align-items-center"
+                            <div class="col-lg-7 d-flex align-items-center"
                                 style="{{ $value->status == 'completed' ? 'text-decoration: Line-Through' :'' }}">
                                  <input type="checkbox"
                                         id="toggleTodoStatus"
@@ -64,6 +66,10 @@
                                 {{ $value->title }}
                             </div>
 
+                                <div class="col-lg-3">
+                                    <span class="btn btn-secondary btn-xs"> {{\App\Models\Todo::STATUS[$value->status]}}</span>
+                                </div>
+
                             <div class="col-lg-2 text-end">
                                 <ul class="d-flex list-unstyled mb-0 justify-content-center">
                                     <li class="me-2">
@@ -73,13 +79,13 @@
                                         </a>
                                     </li>
 
-                                    <li class="me-2  showTodoDetail">
-                                        <a href="#"
+                                    <li class="me-2">
+                                        <a class="showTodoDetail" href="#"
                                            data-title="{{$value->title}}"
                                            data-description="{{$value->description}}"
-                                           data-status="{{$value->status}}"
-                                           data-image="{{\App\Models\Todo::UPLOAD_PATH.$value->image}}"
-                                           data-deadline="{{$value->due_date}}"
+                                           data-status="{{ \App\Models\Todo::STATUS[$value->status] }}"
+                                           data-image="{{asset(\App\Models\Todo::UPLOAD_PATH.$value->image)}}"
+                                           data-deadline="{{ $value->due_date }}"
                                            title="show Todo Detail">
                                             <i class="link-icon" data-feather="eye"></i>
                                         </a>
@@ -108,17 +114,21 @@
                     </div>
                 </div>
             </div>
+            @include('todos.show_modal')
         </div>
         <div class="dataTables_paginate mt-3">
             {{$todoLists->appends($_GET)->links()}}
         </div>
     </div>
 
-
-
 @endsection
 
 @section('scripts')
+    <script>
+        $('.statusFilter').select2({
+            placeholder: 'Search Todo By Status'
+        });
+    </script>
     @include('todos.common.scripts')
 @endsection
 
